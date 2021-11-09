@@ -8,6 +8,6 @@ class GenerateTicketDelayJob < ApplicationJob
   def perform(name, sec = 10)
     sleep sec
     t = Ticket.create(name: name)
-    puts "generate_ticket: #{t}"
+    puts "generate_ticket_delay: #{t}"
   end
 end
