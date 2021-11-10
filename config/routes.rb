@@ -3,5 +3,6 @@ Rails.application.routes.draw do
   get 'generate', to: 'tickets#generate'
   get 'generate_delay', to: 'tickets#generate_delay'
   get 'generate_fail', to: 'tickets#generate_fail'
+  get 'generate_sometimes', to: 'tickets#generate_sometimes'
   get 'delete', to: 'tickets#delete'
 end

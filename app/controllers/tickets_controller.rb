@@ -17,6 +17,12 @@ class TicketsController < ApplicationController
     render plain: "generate ticket fail job start: #{uuid}"
   end
 
+  def generate_sometimes
+    uuid = SecureRandom.uuid
+    GenerateTicketSometimesJob.perform_later(uuid)
+    render plain: "generate ticket sometimes job start: #{uuid}"
+  end
+
   def delete
     id = Ticket.all.last.id
     DeleteTicketJob.perform_later(id)
