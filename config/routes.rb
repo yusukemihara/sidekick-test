@@ -5,4 +5,7 @@ Rails.application.routes.draw do
   get 'generate_fail', to: 'tickets#generate_fail'
   get 'generate_sometimes', to: 'tickets#generate_sometimes'
   get 'delete', to: 'tickets#delete'
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
 end

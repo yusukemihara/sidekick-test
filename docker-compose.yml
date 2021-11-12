@@ -12,8 +12,10 @@ services:
     volumes:
       - db-data:/var/lib/mysql
 
-  web:
+  web: &web
     build: .
+    environment: &web-environment
+      REDIS_TTL: "1000"
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
       - .:/opt/app
@@ -21,5 +23,25 @@ services:
       - 12001:3000
     depends_on:
       - db
+
+  redis:
+    # バージョンはRedis用Amazon ElastiCacheが互換性のあるもの
+    # https://docs.aws.amazon.com/ja_jp/AmazonElastiCache/latest/red-ug/supported-engine-versions.html
+    image: redis:6.0.5-buster
+    volumes:
+      - redis-data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - 12002:6379
+
+  worker:
+    <<: *web
+    environment:
+      <<: *web-environment
+    volumes:
+      - .:/opt/app
+    ports: []
+    command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
 volumes:
   db-data:
+  redis-data:
